@@ -1,6 +1,7 @@
 config
 dst
 *.ndjson
+mbtiles
 
 # Logs
 logs
