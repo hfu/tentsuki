@@ -23,6 +23,14 @@ const status = (count, w3n, src) => {
 const work = async (src, encoding) => {
   return new Promise((resolve) => {
     const s = fs.createReadStream(src, { encoding: encoding })
+      .on('error', err => {
+        console.error(err)
+        s.resume()
+      })
+      .on('end', () => {
+        status(count, '-',src)
+        resolve()
+      })
       .pipe(es.split())
       .pipe(es.mapSync(line => {
         s.pause()
@@ -39,16 +47,7 @@ const work = async (src, encoding) => {
         }
         if (++count % 10000 === 0) status(count, w[0], src)
         s.resume()
-      })
-      .on('error', err => {
-        console.error(err)
-        s.resume()
-      })
-      .on('end', () => {
-        status(count, '-', src)
-        resolve()
-      })
-    )
+      }))
   })
 }
 
