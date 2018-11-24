@@ -41,9 +41,11 @@ const work = async (src, encoding) => {
           const [x, y, z] = tilebelt.pointToTile(b[v[0]], b[v[1]], config.get('z'))
           return `${z}-${x}-${y}`
         }).filter((x, i, self) => self.indexOf(x) === i)
-        for (const w3n of w) {
-          f = modify(f)
-          if (f) streamWrite(w3n,`${JSON.stringify(f)}\n`)
+        f = modify(f)
+        if (f) {
+          for (const w3n of w) {
+            streamWrite(w3n,`${JSON.stringify(f)}\n`)
+          }
         }
         if (++count % 10000 === 0) status(count, w[0], src)
         s.resume()
