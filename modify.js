@@ -77,6 +77,16 @@ module.exports = (f) => {
     case '3103': // 高層建物
       f.tippecanoe.minzoom = maxzoom - 2
       break
+    case '3111': // 普通無壁舎
+      f.tippecanoe.minzoom = maxzoom
+      break
+    case '3112': // 堅ろう無壁舎
+      f.tippecanoe.minzoom = maxzoom - 1
+      break
+    case '3188': // その他
+    case '3199': // 不明
+      f.tippecanoe.minzoom = maxzoom
+      break
     case '3177': // <20>建築物
       f.tippecanoe.mizoom = 12
       f.tippecanoe.maxzoom = 12
