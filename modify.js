@@ -1,5 +1,34 @@
+const geojsonArea = require('@mapbox/geojson-area')
 const maxzoom = 15
 let undefined
+
+// the flap function:
+// a function to return a function to dynamically assign maximum and minimim
+// zoom levels from the area of the polygon geometry.
+const flap = (minzoom, maxzoom, F) => {
+  if (!F) F = 19 // default flap constant
+  return (f) => {
+    if (f.geometry.type !== 'MultiPolygon') return f
+    f.tippecanoe.minzoom = Math.floor(
+      F - Math.log2(geojsonArea.geometry(f.geometry)) / 2
+    )
+    if (f.tippecanoe.minzoom <= minzoom) {
+      if (minzoom === 0) {
+        // tippecanoe requires that minzoom should not be 0.
+        delete f.tippecanoe.minzoom
+      } else {
+        f.tippecanoe.minzoom = minzoom
+      }
+    }
+    if (f.tippecanoe.minzoom >= maxzoom) f.tippecanoe.minzoom = maxzoom
+    return f
+  }
+}
+
+// flap cache
+const flaps = {
+  area: flap(11, 15, 17)
+}
 
 module.exports = (f) => {
   // 当面不要と思われる地物を削除する
@@ -48,6 +77,14 @@ module.exports = (f) => {
     case '3103': // 高層建物
       f.tippecanoe.minzoom = maxzoom - 2
       break
+    case '3177': // <20>建築物
+      f.tippecanoe.mizoom = 12
+      f.tippecanoe.maxzoom = 12
+      if (geojsonArea.geometry(f.geometry) < 2 ** 8) {
+        console.error(`deleted ${f}`)
+        return null
+      }
+      break
 
     case '7351': // 等高線::通常部
     case '7372': // 等高線::数値部
@@ -63,11 +100,6 @@ module.exports = (f) => {
     case '7509': // 土崖（不明）
     case '7511': // 岩崖
       f.tippecanoe.minzoom = maxzoom
-      break
-
-    case '3177': // <20>建築物
-      f.tippecanoe.minzoom = 12
-      f.tippecanoe.maxzoom = 12
       break
   }
   return f
