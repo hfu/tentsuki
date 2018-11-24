@@ -1,9 +1,12 @@
 const maxzoom = 15
+let undefined
 
 module.exports = (f) => {
   // 当面不要と思われる地物を削除する
   switch (f.properties.ftCode) {
     case '9201': // 仮想線
+      return null
+    case undefined:
       return null
   }
 
