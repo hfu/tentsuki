@@ -80,9 +80,13 @@ module.exports = (f) => {
     case '3177': // <20>建築物
       f.tippecanoe.mizoom = 12
       f.tippecanoe.maxzoom = 12
-      if (geojsonArea.geometry(f.geometry) < 2 ** 8) {
-        console.error(`deleted ${f}`)
+      let area = geojsonArea.geometry(f.geometry)
+      // 面積が約 1000 m^2 未満の地物は採用しない
+      if (area < 1000) {
+        // console.error(`deleted ${JSON.stringify(f)} whose area was ${geojsonArea.geometry(f.geometry)}`)
         return null
+      } else if (area > 5000) { // 面積が約 5000 m^2 以上の地物は z=11 から採用する
+        f.tippecanoe.minzoom = 11
       }
       break
 
