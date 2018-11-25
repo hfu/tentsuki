@@ -107,13 +107,15 @@ module.exports = (f) => {
     case '7371': // 等深線::通常部
     case '7372': // 等深線::数値部
     case '7373': // 等深線::崖部
-      f.tippecanoe.minzoom = maxzoom
+      f.tippecanoe.minzoom = maxzoom - 1
+/*
       let alti = parseInt(f.properties.alti)
       if (alti % 20 === 0) f.tippecanoe.minzoom = 14
       if (alti % 40 === 0) f.tippecanoe.minzoom = 13 // or mod 50?
       if (alti % 100 === 0) f.tippecanoe.minzoom = 12
       if (alti % 500 === 0) f.tippecanoe.minzoom = 11
       if (alti % 1000 === 0) f.tippecanoe.minzoom = 10
+*/
       break
 
     case '7501': // 土崖::コンクリートや堅固な石積等の斜面
