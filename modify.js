@@ -108,6 +108,12 @@ module.exports = (f) => {
     case '7372': // 等深線::数値部
     case '7373': // 等深線::崖部
       f.tippecanoe.minzoom = maxzoom
+      let alti = parseInt(f.properties.alti)
+      if (alti % 20 === 0) f.tippecanoe.minzoom = 14
+      if (alti % 40 === 0) f.tippecanoe.minzoom = 13 // or mod 50?
+      if (alti % 100 === 0) f.tippecanoe.minzoom = 12
+      if (alti % 500 === 0) f.tippecanoe.minzoom = 11
+      if (alti % 1000 === 0) f.tippecanoe.minzoom = 10
       break
 
     case '7501': // 土崖::コンクリートや堅固な石積等の斜面
@@ -131,7 +137,17 @@ module.exports = (f) => {
     case '5200': // 水域::河川・湖池
     case '5201': // 水涯線::通常部::河川
     case '5231': // 水涯線::通常部::湖池
+    case '5202': // 水涯線::岩等に接する部分::河川
+    case '5232': // 水涯線::岩等に接する部分::湖池
+    case '5203': // 水涯線::堤防等に接する部分::河川
+    case '5233': // 水涯線::堤防等に接する部分::湖池
+    case '5211': // 水涯線::河口線
+    case '5212': // 水涯線::湖池界線（河川側）
+    case '5242': // 水涯線::湖池界線（湖池側）
+    case '5288': // 水涯線::その他
+    case '5299': // 水涯線::不明
       f.tippecanoe.minzoom = minzoom
+      break
   }
   return f
 }
