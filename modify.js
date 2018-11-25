@@ -1,4 +1,5 @@
 const geojsonArea = require('@mapbox/geojson-area')
+const minzoom = 10
 const maxzoom = 15
 let undefined
 
@@ -101,7 +102,7 @@ module.exports = (f) => {
       break
 
     case '7351': // 等高線::通常部
-    case '7372': // 等高線::数値部
+    case '7352': // 等高線::数値部
     case '7353': // 等高線::崖部
     case '7371': // 等深線::通常部
     case '7372': // 等深線::数値部
@@ -115,6 +116,22 @@ module.exports = (f) => {
     case '7511': // 岩崖
       f.tippecanoe.minzoom = maxzoom
       break
+
+    case '5100': // 水域::海
+    case '5101': // 海岸線::通常部::河川
+    case '5102': // 海岸線::岩等に接する部分
+    case '5103': // 海岸線::堤防等に接する部分
+    case '5111': // 海岸線::河口部（海側）
+    case '5121': // 海岸線::露岩
+    case '5188': // 海岸線::その他
+    case '5199': // 海岸線::不明
+      f.tippecanoe.minzoom = minzoom
+      break
+
+    case '5200': // 水域::河川・湖池
+    case '5201': // 水涯線::通常部::河川
+    case '5231': // 水涯線::通常部::湖池
+      f.tippecanoe.minzoom = minzoom
   }
   return f
 }
